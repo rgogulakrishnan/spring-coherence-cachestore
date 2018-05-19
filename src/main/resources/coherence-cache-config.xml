@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<cache-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://xmlns.oracle.com/coherence/coherence-cache-config"
+              xsi:schemaLocation="http://xmlns.oracle.com/coherence/coherence-cache-config coherence-cache-config.xsd">
+
+    <caching-scheme-mapping>
+
+        <cache-mapping>
+            <cache-name>employee</cache-name>
+            <scheme-name>read-write-distributed</scheme-name>
+            <init-params>
+                <init-param>
+                    <param-name>back-size-limit</param-name>
+                    <param-value>250M</param-value>
+                </init-param>
+            </init-params>
+        </cache-mapping>
+
+    </caching-scheme-mapping>
+
+    <caching-schemes>
+
+        <distributed-scheme>
+            <scheme-name>read-write-distributed</scheme-name>
+            <service-name>ReadWriteDistributedCache</service-name>
+            <backing-map-scheme>
+                <read-write-backing-map-scheme>
+                    <internal-cache-scheme>
+                        <local-scheme/>
+                    </internal-cache-scheme>
+
+                    <cachestore-scheme>
+                        <class-scheme>
+                            <class-name>spring-bean:employeeCacheStore</class-name>
+                            <init-params>
+                                <init-param>
+                                    <param-name>setEntityName</param-name>
+                                    <param-value>{cache-name}</param-value>
+                                </init-param>
+                            </init-params>
+                        </class-scheme>
+                    </cachestore-scheme>
+                </read-write-backing-map-scheme>
+
+            </backing-map-scheme>
+            <autostart>true</autostart>
+        </distributed-scheme>
+
+        <local-scheme>
+            <scheme-name>backing-map</scheme-name>
+            <eviction-policy>hybrid</eviction-policy>
+            <high-units>{back-size-limit 0}</high-units>
+            <unit-calculator>binary</unit-calculator>
+            <expiry-delay>{back-expiry-delay 1h}</expiry-delay>
+        </local-scheme>
+
+    </caching-schemes>
+
+</cache-config>
